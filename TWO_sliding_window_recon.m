@@ -29,7 +29,7 @@ for i = Ind_Ims_Sw
     disp(['Starting Recon ' num2str(counter) ' of ' num2str(length(Ind_Ims_Sw))]);
     tmpfid = myfid(:,i:(i+Sliding_window_size),:);
     tmptraj = mytraj(:,:,i:(i+Sliding_window_size));
-    tmpDCF = get_DCF(tmptraj,Small_size,nIter);
+    tmpDCF = Recon.get_DCF(tmptraj,Small_size,nIter);
     for j = 1:length(coils)
         tmpIms(:,:,:,j) = Recon.mem_eff_recon(Small_size,tmpfid(:,:,j),tmptraj,tmpDCF,j,size(myfid,3),[0 0 0],false);
     end
