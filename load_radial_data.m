@@ -4,7 +4,7 @@ function [fid,traj,ImSize,FOV,mypath,twix_obj] = load_radial_data()
 
 
 %% Read Twix
-twix_obj = mapVBVD_pjn(fullfile(mypath,myfile),'ignoreSeg');
+twix_obj = Import.mapVBVD_pjn(fullfile(mypath,myfile),'ignoreSeg');
 
 if length(twix_obj)>1
     fid = double(twix_obj{2}.image());
@@ -88,4 +88,4 @@ kMax_desired = kFOV_desired/2;
 max_k = max(kMax_desired); %Here, we are in 1/m
 traj = traj/max_k/2;
 
-traj = traj_delay_correction(traj,Dw,Dw*t_delay);
+traj = Tools.traj_delay_correction(traj,Dw,Dw*t_delay);

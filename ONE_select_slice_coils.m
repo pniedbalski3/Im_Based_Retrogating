@@ -21,10 +21,10 @@ myfid = fid(:,1:N_short,:);
 Image = zeros(Desired_Size,Desired_Size,Desired_Size,size(myfid,3)+1);
 
 nIter = 10;
-myDCF = get_DCF(mytraj,Desired_Size,nIter);
+myDCF = Recon.get_DCF(mytraj,Desired_Size,nIter);
 
 for i = 1:size(myfid,3)
-    Image(:,:,:,i+1) = Recon.mem_eff_recon(Desired_Size,myfid(:,:,i),mytraj,myDCF,i,size(myfid,3));
+    Image(:,:,:,i+1) = Recon.pipe_recon(Desired_Size,myfid(:,:,i),mytraj,myDCF,i,size(myfid,3));
 end
 Image(:,:,:,1) = Tools.soscoilcombine(Image); 
 
