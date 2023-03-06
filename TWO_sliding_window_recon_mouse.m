@@ -1,4 +1,4 @@
-function All_Im = TWO_sliding_window_recon(fid,traj,Orig_ImSize,slice,dim,coils,Small_size,Sliding_window_size)
+function All_Im = TWO_sliding_window_recon_mouse(fid,traj,Orig_ImSize,slice,dim,coils,Small_size,Sliding_window_size)
 
 %Function to do a sliding window and reconstruct tons! of images. These
 %images are 3D, and to save >1000 would be insane. Just save the slice that
@@ -17,10 +17,10 @@ else
     mytraj = traj;
 end
 
-%Overlap by 50% - This may be too slow... We'll see.
+%Overlap by 10% - This may be too slow... We'll see.
 
 %get total number of Images in a lazy way
-Ind_Ims_Sw = 1:(Sliding_window_size/2):(size(fid,2)-Sliding_window_size);
+Ind_Ims_Sw = 1:(Sliding_window_size/10):(size(fid,2)-Sliding_window_size);
 Ims = zeros(Small_size,Small_size,length(Ind_Ims_Sw));
 tmpIms = zeros(Small_size,Small_size,Small_size,length(coils));
 nIter = 10;

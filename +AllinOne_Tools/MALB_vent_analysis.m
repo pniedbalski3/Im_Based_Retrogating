@@ -51,6 +51,7 @@ sd250 = std(d250(d250>0));
 
 Edges = linspace(0,1,100);
 
+
 %% Create Histogram
 Output.HistFig = figure('Name','VDP Histogram','position',[350 350 750 350]);
 set(Output.HistFig,'color','white','Units','inches','Position',[0.25 0.25 4 4])
@@ -85,6 +86,10 @@ defectArray = tmp;
 
 Output.VentBinMap = defectArray;
 Output.BinMap = CMap;
+
+if ndims(Image) == 2
+   return;
+end
 
 %For 5 slice, I want to hit a couple different places:
 slicestep = floor((lastslice-firstslice)/8);

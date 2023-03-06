@@ -36,14 +36,42 @@ for i = 1:size(All_Ims,3)
     dLines(1:length(diffline),i) = abs(diff(Lines(:,i)));
     [~,diaphragm_pos(i)] = max(dLines(:,i));
 end
+%Let's look at Otsu thresholding as well.
+My_thresh = graythresh(Lines);
+d_pos_2 = zeros(1,size(All_Ims,3));
+if Lines(1,1)<Lines(end,1)
+    for i = 1:size(All_Ims,3)
+        d_pos_2(i) = find(Lines(:,i)<My_thresh,1,'last');
+    end
+else
+    for i = 1:size(All_Ims,3)
+        d_pos_2(i) = find(Lines(:,i)>My_thresh,1,'last');
+    end
+end
 
-figure('Name','Diaphragm Motion')
+figure('Name','Diaphragm Motion - No Line')
+imagesc(Lines)
+colormap(gray)
+axis off
+
+figure('Name','Diaphragm Motion - Otsu')
 imagesc(Lines)
 colormap(gray)
 axis off
 hold on
-plot(1:size(All_Ims,3),diaphragm_pos,'g','LineWidth',2);
+plot(1:size(All_Ims,3),d_pos_2,'r','LineWidth',1);
 hold off
+
+figure('Name','Diaphragm Motion - Differential Method')
+imagesc(Lines)
+colormap(gray)
+axis off
+hold on
+plot(1:size(All_Ims,3),diaphragm_pos,'g','LineWidth',1);
+hold off
+
+%% Sometimes Otsu's method works better - If so, uncomment this line
+diaphragm_pos = d_pos_2;
 
 
 

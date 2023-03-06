@@ -1,6 +1,12 @@
 function [myfid,mytraj] = change_mat_size(fid,traj,New_Size,Orig_ImSize)
 
-mytraj = traj*Orig_ImSize/New_Size;
+if length(New_Size)==1
+    mytraj = traj*Orig_ImSize/New_Size;
+else
+    mytraj(1,:,:) = traj(1,:,:)*Orig_ImSize(1)/New_Size(1);
+    mytraj(2,:,:) = traj(2,:,:)*Orig_ImSize(2)/New_Size(2);
+    mytraj(3,:,:) = traj(3,:,:)*Orig_ImSize(3)/New_Size(3);
+end
 
 rad = squeeze(sqrt(mytraj(1,:,:).^2+mytraj(2,:,:).^2+mytraj(3,:,:).^2));
 

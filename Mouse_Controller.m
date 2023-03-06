@@ -7,7 +7,7 @@
 %adequate - makes for a fast recon)
 Orig_ImSize = Method_Params.MatrixSize(1);
 Desired_Size = 96;
-NProj = 200;
+NProj = 400;
 
 ONE_select_slice_coils(fid,traj,Orig_ImSize,Desired_Size,NProj) 
 
@@ -17,7 +17,7 @@ ONE_select_slice_coils(fid,traj,Orig_ImSize,Desired_Size,NProj)
 %2 coil elements so that it doesn't take days to do. Also, it would be
 %infeasible to save all >1000 3D images, so just pick the slice for gating
 %(a coronal slice with very clear diaphragm)
-slice = 53; %which slice you want
+slice = 41; %which slice you want
 dim = 2; %Which dimension (from imslice)
 coils = [1 2]; %Pick 1 or 2 coil elements that really show the diaphragm
 
@@ -25,7 +25,7 @@ coils = [1 2]; %Pick 1 or 2 coil elements that really show the diaphragm
 %Sliding_Window. There will be 50% overlap of these image.
 Sliding_Window = 200;
 
-All_Im = TWO_sliding_window_recon(fid,traj,Orig_ImSize,slice,dim,coils,Desired_Size,Sliding_Window);
+All_Im = TWO_sliding_window_recon_mouse(fid,traj,Orig_ImSize,slice,dim,coils,Desired_Size,Sliding_Window);
 
 figure('Name','Find indices of line over diaphram')
 imagesc(squeeze(All_Im(:,:,1)))
@@ -36,8 +36,8 @@ axis off;
 %% Next, visualize Respiratory motion and bin diaphragm posisitons
 
 % Figure out the x and y components of a line going over the diaphragm
-X = [35 35];
-Y = [27 41];
+X = [46 59];
+Y = [43 43];
 
 diaphragm_pos = THREE_diaphragm_motion(All_Im,X,Y);
 

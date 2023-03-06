@@ -27,7 +27,7 @@ dcfObj = Recon.DCF.Iterative(systemObj, nIter, verbose);
 reconObj = Recon.ReconModel.LSQGridded(systemObj, dcfObj, verbose);
 clear modelObj;
 clear dcfObj;
-reconObj.crop = cropOvergriddedImage;
-reconObj.deapodize = deapodizeImage;
+reconObj.crop = 1;%cropOvergriddedImage;
+reconObj.deapodize = 0;%deapodizeImage;
 
 DCF = reconObj;

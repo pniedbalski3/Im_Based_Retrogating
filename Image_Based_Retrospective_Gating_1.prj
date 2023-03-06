@@ -1,0 +1,78 @@
+<deployment-project plugin="plugin.apptool" plugin-version="1.0">
+  <configuration file="C:\Users\pniedbalski\OneDrive - University of Kansas Medical Center\Documents\GitHub\Im_Based_Retrogating\Image_Based_Retrospective_Gating_1.prj" location="C:\Users\pniedbalski\OneDrive - University of Kansas Medical Center\Documents\GitHub\Im_Based_Retrogating" name="Image_Based_Retrospective_Gating_1" target="target.mlapps" target-name="Package App">
+    <param.appname>Image_Based_Retrospective_Gating_1</param.appname>
+    <param.authnamewatermark />
+    <param.email />
+    <param.company />
+    <param.icon />
+    <param.icons />
+    <param.summary />
+    <param.description />
+    <param.screenshot>C:\Users\pniedbalski\AppData\Local\Temp\tp2a7d20bc_0255_410b_b5dd_e237a3be8123.png</param.screenshot>
+    <param.version>1.0</param.version>
+    <param.products.name />
+    <param.products.id />
+    <param.products.version />
+    <param.platforms>
+      <item>win64</item>
+    </param.platforms>
+    <param.output>${PROJECT_ROOT}</param.output>
+    <param.guid>9cab6952-2259-455a-ba58-584852217876</param.guid>
+    <unset>
+      <param.authnamewatermark />
+      <param.email />
+      <param.company />
+      <param.icon />
+      <param.icons />
+      <param.summary />
+      <param.description />
+      <param.version />
+      <param.products.name />
+      <param.products.id />
+      <param.products.version />
+      <param.output />
+    </unset>
+    <fileset.main>
+      <file>${PROJECT_ROOT}\Image_Based_Retrospective_Gating.mlapp</file>
+    </fileset.main>
+    <fileset.depfun>
+      <file>C:\Users\pniedbalski\AppData\Roaming\MathWorks\MATLAB Add-Ons\Apps\Image_Based_Retrospective_Gating\GitHub\Non_Cartesian_Base_Tools\+Recon\+DC\sdc3_MAT.mexw64</file>
+      <file>C:\Users\pniedbalski\AppData\Roaming\MathWorks\MATLAB Add-Ons\Apps\Image_Based_Retrospective_Gating\GitHub\Non_Cartesian_Base_Tools\+Recon\get_DCF.m</file>
+      <file>C:\Users\pniedbalski\AppData\Roaming\MathWorks\MATLAB Add-Ons\Apps\Image_Based_Retrospective_Gating\GitHub\Reconstruct_Siemens_Spiral\+Tools\soscoilcombine.m</file>
+      <file>C:\Users\pniedbalski\AppData\Roaming\MathWorks\MATLAB Add-Ons\Apps\Image_Based_Retrospective_Gating\GitHub\Siemens_UTE_Recon\Siemens UTE Reconstruction Package\+recon\+Grid\grid3_MAT.mexw64</file>
+      <file>C:\Users\pniedbalski\AppData\Roaming\MathWorks\MATLAB Add-Ons\Apps\Image_Based_Retrospective_Gating\MATLAB\In_Vivo_FLORET_Recon\+Recon\mem_eff_recon.m</file>
+    </fileset.depfun>
+    <fileset.resources />
+    <fileset.package />
+    <build-deliverables>
+      <file location="C:\Users\pniedbalski\OneDrive - University of Kansas Medical Center\Documents\GitHub" name="Im_Based_Retrogating" optional="false">C:\Users\pniedbalski\OneDrive - University of Kansas Medical Center\Documents\GitHub\Im_Based_Retrogating</file>
+    </build-deliverables>
+    <workflow />
+    <matlab>
+      <root>C:\Program Files\MATLAB\R2020a</root>
+      <toolboxes>
+        <toolbox name="neuralnetwork" />
+      </toolboxes>
+      <toolbox>
+        <neuralnetwork>
+          <enabled>true</enabled>
+        </neuralnetwork>
+      </toolbox>
+    </matlab>
+    <platform>
+      <unix>false</unix>
+      <mac>false</mac>
+      <windows>true</windows>
+      <win2k>false</win2k>
+      <winxp>false</winxp>
+      <vista>false</vista>
+      <linux>false</linux>
+      <solaris>false</solaris>
+      <osver>10.0</osver>
+      <os32>false</os32>
+      <os64>true</os64>
+      <arch>win64</arch>
+      <matlab>true</matlab>
+    </platform>
+  </configuration>
+</deployment-project>

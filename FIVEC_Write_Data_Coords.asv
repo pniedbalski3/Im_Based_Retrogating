@@ -17,6 +17,11 @@ for i = 1:size(gating,1) %Loop over diaphragm positions
     %Get trajectory the right size and do DCF only once!
     tmptraj = traj;
     tmptraj(:,:,gating(i,:)==0) = [];
+    tmpfid = fid;
+    tmpfid(:,gating(i,:)==0,:) = [];
+    
+    save_for_c
+    
     disp(['Density Compensation for Image ' num2str(i) ' of ' num2str(size(gating,1))]); 
     tmpDCF = get_DCF(tmptraj,Desired_ImSize,nIter);
     disp(['Density Compensation for Image ' num2str(i) ' of ' num2str(size(gating,1)) ' Complete']); 
