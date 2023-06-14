@@ -7,7 +7,7 @@ function ONE_select_slice_coils(fid,traj,Orig_ImSize,Desired_Size,N_short)
 if nargin<5
     N_short = 200;
 end
-
+%%
 mytraj = traj(:,:,1:N_short);
 myfid = fid(:,1:N_short,:);
 
@@ -24,7 +24,7 @@ nIter = 10;
 myDCF = Recon.get_DCF(mytraj,Desired_Size,nIter);
 
 for i = 1:size(myfid,3)
-    Image(:,:,:,i+1) = Recon.pipe_recon(Desired_Size,myfid(:,:,i),mytraj,myDCF,i,size(myfid,3));
+    Image(:,:,:,i+1) = Recon.mem_eff_recon(Desired_Size,myfid(:,:,i),mytraj,myDCF,i,size(myfid,3));
 end
 Image(:,:,:,1) = Tools.soscoilcombine(Image); 
 

@@ -26,9 +26,9 @@ ONE_select_slice_coils(fid,traj,Orig_ImSize,Desired_Size,NProj)
 %2 coil elements so that it doesn't take days to do. Also, it would be
 %infeasible to save all >1000 3D images, so just pick the slice for gating
 %(a coronal slice with very clear diaphragm)
-slice = 57; %which slice you want
+slice = 59; %which slice you want
 dim = 2; %Which dimension (from imslice)
-coils = [11 12]; %Pick 1 or 2 coil elements that really show the diaphragm
+coils = [14 18]; %Pick 1 or 2 coil elements that really show the diaphragm
 
 %About to reconstruct images with the number of projections specified by
 %Sliding_Window. There will be 50% overlap of these image.
@@ -46,8 +46,8 @@ axis off;
 %% Next, visualize Respiratory motion and bin diaphragm posisitons
 
 % Figure out the x and y components of a line going over the diaphragm
-X = [55 75];
-Y = [80 80];
+X = [42 75];
+Y = [61 61];
 
 diaphragm_pos = THREE_diaphragm_motion(All_Im,X,Y);
 
@@ -58,11 +58,28 @@ diaphragm_pos = THREE_diaphragm_motion(All_Im,X,Y);
 %holding projection indices for each diaphram position.
 my_index = FOUR_get_gated_indices(diaphragm_pos,Sliding_Window,fid);
 
+numbinned = sum(my_index,2);
+my_index(numbinned<12000,:) = [];
+
+my_index(1,:) = [];
+my_index(1,:) = [];
+my_index(4,:) = [];
+my_index(4,:) = [];
+
+numbinned = sum(my_index,2);
+[~,final_gate] = max(numbinned);
+
 figure('Name','Check_Gating_Indices')
 imagesc(my_index);
 
-%% Write out data for CS recon
-FIVEC_Write_Data_Coords(fid,traj,Orig_ImSize,my_index,pwd,Orig_ImSize);
+save(fullfile(mypath,'Gating_Index.mat'),'my_index');
+%% Write out data for BART recon
+FIVEC_Write_Data_Coords(fid,traj,Orig_ImSize,my_index,'Exp_data',Orig_ImSize,FOV,final_gate);
+
+
+%% Cardiac-Gated Imaging?
+[chigh,clow] = cardiac_gate(fid(:,:,24),3.5);
+[ImHigh,ImLow] = cardiac_gate_step2(fid,traj,my_index(6,:),chigh,clow,400,128);
 
 %% Finally, reconstruct images for every binned diaphragm position - This will give several images 
 %Note, take quantitative values with a grain of salt, because each image
@@ -80,17 +97,17 @@ FIVEC_Write_Data_Coords(fid,traj,Orig_ImSize,my_index,pwd,Orig_ImSize);
 Subsampled_ImSize = Orig_ImSize;
 %Subsampled_ImSize = 200;
 
-FIVE_Reconstruct_Images(fid,traj,Orig_ImSize,my_index,pwd,FOV,Subsampled_ImSize)
+FIVE_Reconstruct_Images(fid,traj,Orig_ImSize,my_index,mypath,FOV,Subsampled_ImSize)
 
-%% Combine a couple of expiratory bins to get a more fully sampled image
-combinebins = [2,3];
+% Combine a couple of expiratory bins to get a more fully sampled image
+combinebins = [4 5];
 
 %FOV = 400;
-Subsampled_ImSize = 234;%Orig_ImSize;
+Subsampled_ImSize = Orig_ImSize;
 
-Patient_Name = 'CXe-007_02';
+Patient_Name = 'Xe-052';
 
-FIVEB_Reconstruct_Combined_Image(fid,traj,Orig_ImSize,my_index,pwd,FOV,combinebins,Subsampled_ImSize,twix_obj,Patient_Name)
+FIVEB_Reconstruct_Combined_Image(fid,traj,Orig_ImSize,my_index,mypath,FOV,combinebins,Subsampled_ImSize,twix_obj,Patient_Name)
 
 
 %% Soft gating Reconstruction - This doesn't work right now. Maybe revisit sometime

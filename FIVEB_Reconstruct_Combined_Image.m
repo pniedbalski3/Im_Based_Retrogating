@@ -21,7 +21,7 @@ end
 
 tmptraj = traj;
 tmptraj(:,:,which_bins==0) = [];
-tmpDCF = get_DCF(tmptraj,Desired_ImSize,nIter);
+tmpDCF = Recon.get_DCF(tmptraj,Desired_ImSize,nIter);
 SOS_Im = zeros(Desired_ImSize,Desired_ImSize,Desired_ImSize);
 for j = 1:size(fid,3) %Loop over coils
     tmpfid = squeeze(fid(:,:,j));
@@ -34,8 +34,9 @@ SOS_Im = sqrt(SOS_Im);
 
 imslice(abs(SOS_Im/max(SOS_Im(:))));
 
-[N4_Im,~] = GasExchangeV3.Dissolved_ProtonBiasCorrection(SOS_Im);
-N4_Im = N4_Im/max(N4_Im(:));
+niftiwrite(SOS_Im,fullfile(write_path,'End_Expiration_Image'),'Compressed',true);
+% [N4_Im,~] = GasExchangeV3.Dissolved_ProtonBiasCorrection(SOS_Im);
+% N4_Im = N4_Im/max(N4_Im(:));
 
 
 %% Write to DICOM first before rotating image for proper Nifti orientation.
@@ -72,18 +73,18 @@ end
 
 %% Write Image - This should be canonical Orientation.
 %Nifti_Info = AllinOne_Tools.nifti_metadata(SOS_Im,FOV/Desired_ImSize,FOV);
-SOS_Im = fliplr(SOS_Im);
-SOS_Im = flip(SOS_Im,3);
-Nifti_Info = AllinOne_Tools.nifti_metadata(SOS_Im,FOV/Desired_ImSize,FOV);
-Nifti_Info.Transform.T(1,1) = 1;
-Nifti_Info.Transform.T(2,2) = 1;
-Nifti_Info.Transform.T(3,3) = 1;
-Nifti_Info.Transform.T(4,4) = 1;
-Nifti_Info.Transform.T(4,1) = -FOV/2;
-Nifti_Info.Transform.T(4,2) = -FOV/2;
-Nifti_Info.Transform.T(4,3) = -FOV/2;
-
-niftiwrite(SOS_Im,fullfile(write_path,'End_Expiration_Image'),Nifti_Info,'Compressed',true);
+% SOS_Im = fliplr(SOS_Im);
+% SOS_Im = flip(SOS_Im,3);
+% Nifti_Info = AllinOne_Tools.nifti_metadata(SOS_Im,FOV/Desired_ImSize,FOV);
+% Nifti_Info.Transform.T(1,1) = 1;
+% Nifti_Info.Transform.T(2,2) = 1;
+% Nifti_Info.Transform.T(3,3) = 1;
+% Nifti_Info.Transform.T(4,4) = 1;
+% Nifti_Info.Transform.T(4,1) = -FOV/2;
+% Nifti_Info.Transform.T(4,2) = -FOV/2;
+% Nifti_Info.Transform.T(4,3) = -FOV/2;
+% 
+% niftiwrite(SOS_Im,fullfile(write_path,'End_Expiration_Image'),Nifti_Info,'Compressed',true);
 
 
     

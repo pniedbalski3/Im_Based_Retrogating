@@ -39,14 +39,18 @@ end
 %Let's look at Otsu thresholding as well.
 My_thresh = graythresh(Lines);
 d_pos_2 = zeros(1,size(All_Ims,3));
-if Lines(1,1)<Lines(end,1)
-    for i = 1:size(All_Ims,3)
-        d_pos_2(i) = find(Lines(:,i)<My_thresh,1,'last');
+try
+    if Lines(1,1)<Lines(end,1)
+        for i = 1:size(All_Ims,3)
+            d_pos_2(i) = find(Lines(:,i)<My_thresh,1,'last');
+        end
+    else
+        for i = 1:size(All_Ims,3)
+            d_pos_2(i) = find(Lines(:,i)>My_thresh,1,'last');
+        end
     end
-else
-    for i = 1:size(All_Ims,3)
-        d_pos_2(i) = find(Lines(:,i)>My_thresh,1,'last');
-    end
+catch
+    disp('Otsu Mask Failed');
 end
 
 figure('Name','Diaphragm Motion - No Line')
