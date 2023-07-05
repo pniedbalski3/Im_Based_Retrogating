@@ -75,10 +75,36 @@ imagesc(my_index);
 save(fullfile(mypath,'Gating_Index.mat'),'my_index');
 %% Write out data for BART recon
 FIVEC_Write_Data_Coords(fid,traj,Orig_ImSize,my_index,'Exp_data',Orig_ImSize,FOV,final_gate);
+%% BART Recon
+mydir = mypath;
+cd '/home/XeAnalysis/bart'
+file_name = fullfile(mydir,'Exp_data');
 
+% Coil Combine and Reconstruct
+mycmd = system(['./bart fmac ' file_name '_data ' file_name '_dcf ' file_name '_datac']) 
+%Base Recon
+mycmd = system(['./bart nufft -a -d 400:400:400 ' file_name '_traj ' file_name '_datac ' file_name '_imgL'])
+% FFT
+mycmd = system(['./bart fft 7 ' file_name '_imgL ' file_name '_ksp'])
+% Coil Combination - Use 8 coils to make sure we have adequate memory
+mycmd = system(['./bart cc -M ' file_name '_ksp ' file_name '_ccMatrix'])
+mycmd = system(['./bart ccapply -p 8 ' file_name '_data ' file_name '_ccMatrix ' file_name '_data1'])
+mycmd = system(['./bart ccapply -p 8 ' file_name '_ksp ' file_name '_ccMatrix ' file_name '_ksp1'])
+
+% Estimate coil sensitivies from k-spac>getNextLine (line 38)
+mycmd = system(['./bart caldir 24 ' file_name '_ksp1 ' file_name '_mapsL'])
+
+tic
+mycmd = system(['export OMP_NUM_THREADS=32; ./bart pics -C 50 -i 80 -R T:7:0:0.001 -p ' file_name '_dcf2 -t ' file_name '_traj ' file_name '_data1 ' file_name '_mapsL ' file_name '_picsrecon'])
+toc
+
+cd(mydir)
+Im = readcfl([file_name '_picsrecon']);
+Im = flip(flip(flip(Im,1),2),3);
+niftiwrite(abs(Im),'BART_UTE_EXP_Recon','Compressed',true);
 
 %% Cardiac-Gated Imaging?
-[chigh,clow] = cardiac_gate(fid(:,:,24),3.5);
+card_binning = cardiac_gate(fid(:,:,24),3.5);
 [ImHigh,ImLow] = cardiac_gate_step2(fid,traj,my_index(6,:),chigh,clow,400,128);
 
 %% Finally, reconstruct images for every binned diaphragm position - This will give several images 

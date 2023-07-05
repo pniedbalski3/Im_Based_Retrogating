@@ -1,4 +1,4 @@
-function [myfid,mytraj] = change_mat_size(fid,traj,New_Size,Orig_ImSize)
+function [myfid,mytraj] = change_mat_size_bart(fid,traj,New_Size,Orig_ImSize)
 
 if length(New_Size)==1
     mytraj = traj*Orig_ImSize/New_Size;

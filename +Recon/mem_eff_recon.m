@@ -1,4 +1,4 @@
-function Image_Out = mem_eff_recon(ImageSize,data,traj,DCF,cur_it,tot_coils,PixelShift,Verbose)
+function [Image_Out,gdata] = mem_eff_recon(ImageSize,data,traj,DCF,cur_it,tot_coils,PixelShift,Verbose)
 %% A Function written to reconstruct Images when K-space data and trajectories are passed to it
 % Uses Pipe's Group DCF and gridding code. This is for 3D data
 % 
@@ -81,7 +81,7 @@ for coil = 1:chan
     if Verbose
         disp(['Gridding channel ', num2str(n), ' of ', num2str(tot_coils), '...']);
     end
-    gdata(:,:,:,:,coil) = recon.Grid.grid3_MAT(squeeze(data_comb(:,:,:,coil)),traj,DCF,effMtx*alpha,numThread);
+    gdata(:,:,:,:,coil) = Recon.Grid.grid3_MAT(squeeze(data_comb(:,:,:,coil)),traj,DCF,effMtx*alpha,numThread);
 end
 %Free memory now that done with data_comb and traj
 clear data_comb;
@@ -107,7 +107,7 @@ end
 delta = [1.0, 0.0];
 k_not = [0.0, 0.0, 0.0];
 DCF_not = 1.0;
-rokern = recon.Grid.grid3_MAT(delta',k_not',DCF_not,effMtx*alpha,numThread);
+rokern = Recon.Grid.grid3_MAT(delta',k_not',DCF_not,effMtx*alpha,numThread);
 
 %% FFT to rolloff image
 if Verbose
@@ -142,6 +142,7 @@ Image = circshift(circshift(circshift(Image,round(PixelShift(1)),1),round(PixelS
 xs = floor(effMtx - effMtx/alpha)+1;
 xe = floor(effMtx + effMtx/alpha);
 Image_Out = Image(xs:xe,xs:xe,xs:xe,:);
+gdata = gdata(xs:xe,xs:xe,xs:xe,:);
 if Verbose
     disp('Reconstruction complete.');
 end
