@@ -26,9 +26,9 @@ ONE_select_slice_coils(fid,traj,Orig_ImSize,Desired_Size,NProj)
 %2 coil elements so that it doesn't take days to do. Also, it would be
 %infeasible to save all >1000 3D images, so just pick the slice for gating
 %(a coronal slice with very clear diaphragm)
-slice = 59; %which slice you want
+slice = 70; %which slice you want
 dim = 2; %Which dimension (from imslice)
-coils = [14 18]; %Pick 1 or 2 coil elements that really show the diaphragm
+coils = [7 9]; %Pick 1 or 2 coil elements that really show the diaphragm
 
 %About to reconstruct images with the number of projections specified by
 %Sliding_Window. There will be 50% overlap of these image.
@@ -46,8 +46,8 @@ axis off;
 %% Next, visualize Respiratory motion and bin diaphragm posisitons
 
 % Figure out the x and y components of a line going over the diaphragm
-X = [42 75];
-Y = [61 61];
+X = [2 25];
+Y = [57 57];
 
 diaphragm_pos = THREE_diaphragm_motion(All_Im,X,Y);
 
@@ -61,10 +61,10 @@ my_index = FOUR_get_gated_indices(diaphragm_pos,Sliding_Window,fid);
 numbinned = sum(my_index,2);
 my_index(numbinned<12000,:) = [];
 
-my_index(1,:) = [];
-my_index(1,:) = [];
-my_index(4,:) = [];
-my_index(4,:) = [];
+% my_index(1,:) = [];
+% my_index(1,:) = [];
+% my_index(4,:) = [];
+% my_index(4,:) = [];
 
 numbinned = sum(my_index,2);
 [~,final_gate] = max(numbinned);
@@ -74,16 +74,19 @@ imagesc(my_index);
 
 save(fullfile(mypath,'Gating_Index.mat'),'my_index');
 %% Write out data for BART recon
-FIVEC_Write_Data_Coords(fid,traj,Orig_ImSize,my_index,'Exp_data',Orig_ImSize,FOV,final_gate);
+FIVEC_Write_Data_Coords(fid,traj,Orig_ImSize,my_index,fullfile(mypath,'Exp_data'),Orig_ImSize,FOV,final_gate);
 %% BART Recon
 mydir = mypath;
+
 cd '/home/XeAnalysis/bart'
 file_name = fullfile(mydir,'Exp_data');
+
+tmpstr = [num2str(Orig_ImSize) ':' num2str(Orig_ImSize) ':' num2str(Orig_ImSize) ' '];
 
 % Coil Combine and Reconstruct
 mycmd = system(['./bart fmac ' file_name '_data ' file_name '_dcf ' file_name '_datac']) 
 %Base Recon
-mycmd = system(['./bart nufft -a -d 400:400:400 ' file_name '_traj ' file_name '_datac ' file_name '_imgL'])
+mycmd = system(['./bart nufft -a -d ' tmpstr file_name '_traj ' file_name '_datac ' file_name '_imgL'])
 % FFT
 mycmd = system(['./bart fft 7 ' file_name '_imgL ' file_name '_ksp'])
 % Coil Combination - Use 8 coils to make sure we have adequate memory
@@ -126,12 +129,12 @@ Subsampled_ImSize = Orig_ImSize;
 FIVE_Reconstruct_Images(fid,traj,Orig_ImSize,my_index,mypath,FOV,Subsampled_ImSize)
 
 % Combine a couple of expiratory bins to get a more fully sampled image
-combinebins = [4 5];
+combinebins = [3];
 
 %FOV = 400;
 Subsampled_ImSize = Orig_ImSize;
 
-Patient_Name = 'Xe-052';
+Patient_Name = 'BEG_005';
 
 FIVEB_Reconstruct_Combined_Image(fid,traj,Orig_ImSize,my_index,mypath,FOV,combinebins,Subsampled_ImSize,twix_obj,Patient_Name)
 

@@ -22,11 +22,14 @@ end
 tmptraj = traj;
 tmptraj(:,:,which_bins==0) = [];
 tmpDCF = Recon.get_DCF(tmptraj,Desired_ImSize,nIter);
-SOS_Im = zeros(Desired_ImSize,Desired_ImSize,Desired_ImSize);
+%SOS_Im = zeros(Desired_ImSize,Desired_ImSize,Desired_ImSize);
 for j = 1:size(fid,3) %Loop over coils
     tmpfid = squeeze(fid(:,:,j));
     tmpfid(:,which_bins==0) = [];
-    this_coil_Im = Recon.mem_eff_recon(Desired_ImSize,tmpfid,tmptraj,tmpDCF,j,size(fid,3),[0 0 0],true);
+    this_coil_Im = Recon.mem_eff_recon(Desired_ImSize,tmpfid,tmptraj,tmpDCF,j,size(fid,3),[0 0 0],true,1);
+    if j == 1
+        SOS_Im = zeros(size(this_coil_Im));
+    end
     SOS_Im = SOS_Im + (abs(this_coil_Im)).^2;
 end
 %Wrap it up and write out images to NIFTI

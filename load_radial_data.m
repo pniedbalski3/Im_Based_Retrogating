@@ -16,14 +16,21 @@ end
 fid = permute(fid,[1,3,2]);
 
 %% Hardcoded Parameters for my Radial Setup
-ImSize = 400; %Desired Recon size. Specified 268 for 1.5 mm isotropic res, but went way farther out in k-space than that.
-FOV = 400;
-ADC_Dur = 903; %ADC in us
-RUT = 140; %Ramp Up Time in us
+ImSize = twix_obj.hdr.MeasYaps.sKSpace.lBaseResolution; %Desired Recon size. Specified 268 for 1.5 mm isotropic res, but went way farther out in k-space than that.
+FOV = twix_obj.hdr.Config.RoFOV;
+if FOV < 400
+    MaxGrad = 13.119133;
+    ADC_Dur = 650;
+    RUT = 140;
+else
+    ADC_Dur = 903; %ADC in us
+    RUT = 140; %Ramp Up Time in us
+    MaxGrad = 13.980741193; %Max Gradient in mT/m from simulation ERR file
+end
 Resolution = [FOV/ImSize FOV/ImSize FOV/ImSize]/1000;
 %gamma = 11.777;
 gamma = 42.6;
-MaxGrad = 13.980741193; %Max Gradient in mT/m from simulation ERR file
+
 t_delay = 4; % 6 appears to be the magic number for getting really nice images.
 %This number may have changed when I changed the echo time slightly.
 TR = 3.5;

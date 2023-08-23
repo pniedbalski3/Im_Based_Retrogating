@@ -1,4 +1,7 @@
-function [Image_Out,gdata] = mem_eff_recon(ImageSize,data,traj,DCF,cur_it,tot_coils,PixelShift,Verbose)
+function [Image_Out,gdata] = mem_eff_recon(ImageSize,data,traj,DCF,cur_it,tot_coils,PixelShift,Verbose,nocrop)
+if nargin < 9
+    nocrop = 0;
+end
 %% A Function written to reconstruct Images when K-space data and trajectories are passed to it
 % Uses Pipe's Group DCF and gridding code. This is for 3D data
 % 
@@ -141,7 +144,11 @@ Image = circshift(circshift(circshift(Image,round(PixelShift(1)),1),round(PixelS
 %% Crop
 xs = floor(effMtx - effMtx/alpha)+1;
 xe = floor(effMtx + effMtx/alpha);
-Image_Out = Image(xs:xe,xs:xe,xs:xe,:);
+if nocrop == 1
+    Image_Out = Image;
+else
+    Image_Out = Image(xs:xe,xs:xe,xs:xe,:);
+end
 gdata = gdata(xs:xe,xs:xe,xs:xe,:);
 if Verbose
     disp('Reconstruction complete.');

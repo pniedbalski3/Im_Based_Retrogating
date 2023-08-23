@@ -20,16 +20,19 @@ for i = 1:size(gating,1) %Loop over diaphragm positions
     disp(['Density Compensation for Image ' num2str(i) ' of ' num2str(size(gating,1))]); 
     tmpDCF = Recon.get_DCF(tmptraj,Desired_ImSize,nIter);
     disp(['Density Compensation for Image ' num2str(i) ' of ' num2str(size(gating,1)) ' Complete']); 
-    this_coil_Im = zeros(Desired_ImSize,Desired_ImSize,Desired_ImSize);
-    SOS_Im = zeros(Desired_ImSize,Desired_ImSize,Desired_ImSize);
+    %this_coil_Im = zeros(Desired_ImSize,Desired_ImSize,Desired_ImSize);
+    %SOS_Im = zeros(Desired_ImSize,Desired_ImSize,Desired_ImSize);
     Test_Im = zeros(Desired_ImSize,Desired_ImSize,Desired_ImSize);
     Test_Im2 = zeros(Desired_ImSize,Desired_ImSize,Desired_ImSize);
     Test_Im3 = zeros(Desired_ImSize,Desired_ImSize,Desired_ImSize);
     for j = 1:size(fid,3) %Loop over coils
         tmpfid = squeeze(fid(:,:,j));
         tmpfid(:,gating(i,:)==0) = [];
-        [this_coil_Im,k] = Recon.mem_eff_recon(Desired_ImSize,tmpfid,tmptraj,tmpDCF,j,size(fid,3),[0 0 0],true);
+        [this_coil_Im,k] = Recon.mem_eff_recon(Desired_ImSize,tmpfid,tmptraj,tmpDCF,j,size(fid,3),[0 0 0],true,1);
         % map = bart('caldir 24',k);
+        if j == 1
+            SOS_Im = zeros(size(this_coil_Im));
+        end
         SOS_Im = SOS_Im + (abs(this_coil_Im)).^2;
         % Test_Im = Test_Im + this_coil_Im.*map;
         % Test_Im2 = Test_Im2 + (this_coil_Im.*map).^2;
